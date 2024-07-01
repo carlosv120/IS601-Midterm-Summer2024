@@ -1,7 +1,6 @@
 import os
 import pkgutil
 import importlib
-import sys
 from app.commands import CommandHandler, Command
 from app.plugins.menu import MenuCommand
 from dotenv import load_dotenv
@@ -65,7 +64,7 @@ class Calculator:
         self.load_plugins()
         
         # Add the Menu plugin to the list and register the menu command
-        self.plugins.append("Menu")  
+        self.plugins.append("menu")  
         self.command_handler.register_command("menu", MenuCommand(self.plugins))
 
         # Print available plugins

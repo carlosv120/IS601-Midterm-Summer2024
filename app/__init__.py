@@ -3,6 +3,7 @@ import pkgutil
 import importlib
 from app.commands import CommandHandler, Command
 from app.plugins.menu import MenuCommand
+from app.plugins.csv import CsvCommand
 from dotenv import load_dotenv
 import logging
 import logging.config
@@ -16,11 +17,12 @@ class Calculator:
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
 
         self.command_handler = CommandHandler()
+        self.csv_command = CsvCommand()
         self.plugins = []  # List to store the names of loaded plugins
 
     def configure_logging(self):
         logging_conf_path = 'logging.conf'
-        if os.path.exists(logging_conf_path):
+        if (os.path.exists(logging_conf_path)):
             logging.config.fileConfig(logging_conf_path, disable_existing_loggers=False)
         else:
             logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -51,7 +53,11 @@ class Calculator:
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
-                self.command_handler.register_command(plugin_name.lower(), item())
+                # Pass the CsvCommand instance to AdditionCommand
+                if plugin_name == "addition":
+                    self.command_handler.register_command(plugin_name.lower(), item(self.csv_command))
+                else:
+                    self.command_handler.register_command(plugin_name.lower(), item())
                 self.plugins.append(plugin_name)
                 logging.info(f"Command '{plugin_name}' from plugin '{plugin_name}' registered.")
 

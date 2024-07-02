@@ -5,10 +5,12 @@ from app.plugins.csv import CsvCommand
 
 @pytest.fixture
 def csv_command():
+    """Fixture to create a CsvCommand instance."""
     return CsvCommand()
 
 @pytest.fixture
 def addition_command(csv_command):
+    """Fixture to create an AdditionCommand instance with a CsvCommand dependency."""
     return AdditionCommand(csv_command)
 
 def test_add_success(addition_command, capfd):

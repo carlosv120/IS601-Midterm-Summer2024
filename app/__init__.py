@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 import logging
 import logging.config
 
-
 class Calculator:
     def __init__(self): 
         os.makedirs('logs', exist_ok=True)
@@ -24,7 +23,7 @@ class Calculator:
         if os.path.exists(logging_conf_path):
             logging.config.fileConfig(logging_conf_path, disable_existing_loggers=False)
         else:
-            logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+            logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logging.info("Logging configured.")
     
     def load_environment_variables(self):
@@ -46,18 +45,15 @@ class Calculator:
                     plugin_module = importlib.import_module(f'{plugins_package}.{plugin_name}')
                     self.register_plugin_commands(plugin_module, plugin_name)
                 except TypeError as te:
-                    logging.error(f"Error importing plugin {plugin_name}:{te}")
-
+                    logging.error(f"Error importing plugin {plugin_name}: {te}")
 
     def register_plugin_commands(self, plugin_module, plugin_name):
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
-                # Command names are now explicitly set to the plugin's folder name
                 self.command_handler.register_command(plugin_name.lower(), item())
                 self.plugins.append(plugin_name)
                 logging.info(f"Command '{plugin_name}' from plugin '{plugin_name}' registered.")
-
 
     def start(self):
         # Load plugins

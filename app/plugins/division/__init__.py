@@ -3,6 +3,9 @@ from app.commands import Command
 import logging
 
 class DivisionCommand(Command):
+    def __init__(self, csv_command):
+        self.csv_command = csv_command
+
     def execute(self, num1=None, num2=None, raise_exception=False):
         try:
             if num1 is None:
@@ -27,6 +30,9 @@ class DivisionCommand(Command):
             logging.info("Division result: %s", result)
 
             print(f"The result of dividing {num1_decimal} by {num2_decimal} is: {result}")
+
+            # Log the calculation to CSV
+            self.csv_command.add_calculation('division', num1, num2, result)
 
         except InvalidOperation:
             logging.error("Invalid number input: %s or %s is not a valid number", num1, num2)

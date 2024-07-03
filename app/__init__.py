@@ -54,7 +54,7 @@ class Calculator:
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
                 # Pass the CsvCommand instance to AdditionCommand
-                if plugin_name == "addition":
+                if plugin_name == "addition" or plugin_name == "subtraction" or plugin_name == "multiplication" or plugin_name == "division":
                     self.command_handler.register_command(plugin_name.lower(), item(self.csv_command))
                 else:
                     self.command_handler.register_command(plugin_name.lower(), item())

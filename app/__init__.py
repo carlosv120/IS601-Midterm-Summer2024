@@ -9,7 +9,7 @@ import logging
 import logging.config
 
 class Calculator:
-    def __init__(self): 
+    def __init__(self):
         os.makedirs('logs', exist_ok=True)
         self.configure_logging()
         load_dotenv()
@@ -22,7 +22,7 @@ class Calculator:
 
     def configure_logging(self):
         logging_conf_path = 'logging.conf'
-        if (os.path.exists(logging_conf_path)):
+        if os.path.exists(logging_conf_path):
             logging.config.fileConfig(logging_conf_path, disable_existing_loggers=False)
         else:
             logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -53,8 +53,7 @@ class Calculator:
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
-                # Pass the CsvCommand instance to AdditionCommand
-                if plugin_name == "addition" or plugin_name == "subtraction" or plugin_name == "multiplication" or plugin_name == "division":
+                if hasattr(item.__init__, '__code__') and 'csv_command' in item.__init__.__code__.co_varnames:
                     self.command_handler.register_command(plugin_name.lower(), item(self.csv_command))
                 else:
                     self.command_handler.register_command(plugin_name.lower(), item())
@@ -66,7 +65,7 @@ class Calculator:
         self.load_plugins()
         
         # Add the Menu plugin to the list and register the menu command
-        self.plugins.append("menu")  
+        self.plugins.append("Menu")
         self.command_handler.register_command("menu", MenuCommand(self.plugins))
 
         # Print available plugins

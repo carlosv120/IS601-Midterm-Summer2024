@@ -9,6 +9,7 @@ class CsvCommand(Command):
         self.data_dir = 'data'
         self.csv_file_path = os.path.join(self.data_dir, 'calculation_history.csv')
         self.load_existing_history()
+        logging.info("CsvCommand initialized.")
 
     def load_existing_history(self):
         if os.path.exists(self.csv_file_path):
@@ -27,11 +28,12 @@ class CsvCommand(Command):
             'result': result
         })
         self.save_to_csv()
+        logging.info(f"Calculation added: {operation}({num1}, {num2}) = {result}")
 
     def save_to_csv(self):
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
-            logging.info(f"The directory '{self.data_dir}' is created")
+            logging.info(f"The directory '{self.data_dir}' is created.")
         elif not os.access(self.data_dir, os.W_OK):
             logging.error(f"The directory '{self.data_dir}' is not writable.")
             return
@@ -63,9 +65,11 @@ class CsvCommand(Command):
         print("load ---- clear ---- delete ---- back")
         print('-' * 120)
         print("Type 'back' to return to the main menu.")
+        logging.info("CSV Command Menu displayed.")
         
         while True:
             choice = input("Enter a csv command: ").strip().lower()
+            logging.info(f"User selected command: {choice}")
             if choice == 'load':
                 self.load_and_display_history()
             elif choice == 'clear':
@@ -78,11 +82,14 @@ class CsvCommand(Command):
                     print(f"Calculation at index {index} deleted.")
                 except ValueError:
                     print("Invalid input. Please enter a valid number.")
+                    logging.warning("User entered invalid number for deletion.")
             elif choice == 'back':
                 print("You are in the main menu")
+                logging.info("Returning to the main menu.")
                 break
             else:
                 print("Invalid command. Please enter 'load', 'clear', 'delete', or 'back'.")
+                logging.warning("Invalid command entered.")
 
     def load_and_display_history(self):
         self.load_existing_history()

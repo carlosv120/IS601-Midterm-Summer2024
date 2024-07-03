@@ -7,5 +7,19 @@ class MenuCommand(Command):
         logging.info("MenuCommand initialized with plugins: %s", plugins)
 
     def execute(self):
-        print("Loaded plugins:", "\t\t".join(self.plugins))
-        logging.info("MenuCommand executed successfully")
+        logging.info("MenuCommand executed successfully, displaying commands loaded")
+
+        if not self.plugins:
+            print("No plugins loaded.")
+            logging.warning("No plugins loaded.")
+            return
+
+        # Print header
+        print(f"{'Plugins:'}")
+        print('-' * 120)
+
+        # Print plugins in a single line
+        print("  ----  ".join(self.plugins))
+        print('-' * 120)
+
+

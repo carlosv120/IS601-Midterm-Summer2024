@@ -59,8 +59,7 @@ class CsvCommand(Command):
             logging.warning(f"Invalid index {index}. Cannot delete calculation.")
 
     def execute(self):
-        print("CSV Command Menu:")
-        print('-' * 120)
+        print("CSV Command Menu:\n" + '-' * 120)
         print("load ---- clear ---- delete ---- back")
         print('-' * 120)
         print("Type 'back' to return to the main menu.")

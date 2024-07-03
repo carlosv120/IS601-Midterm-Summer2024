@@ -9,11 +9,6 @@ class MenuCommand(Command):
     def execute(self):
         logging.info("MenuCommand executed successfully, displaying commands loaded")
 
-        if not self.plugins:
-            print("No plugins loaded.")
-            logging.warning("No plugins loaded.")
-            return
-
         # Print header
         print(f"{'Plugins:'}")
         print('-' * 120)

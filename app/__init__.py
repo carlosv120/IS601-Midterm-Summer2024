@@ -80,5 +80,5 @@ class Calculator:
 
         print("Type 'exit' to exit.")
         while True:  # REPL Read, Evaluate, Print, Loop
-            user_input = input(">>> ").strip().lower()
+            user_input = input("Enter a calculator command: ").strip().lower()
             self.command_handler.execute_command(user_input)

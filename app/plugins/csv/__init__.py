@@ -43,18 +43,57 @@ class CsvCommand(Command):
         except Exception as e:
             logging.error(f"Failed to write CSV file: {e}")
 
+    def clear_history(self):
+        '''Clears the history of calculations'''
+        self.calculation_history.clear()
+        self.save_to_csv()
+        logging.info("Calculation history cleared.")
+
+    def delete_calculation(self, index):
+        '''Deletes a calculation by index'''
+        if 0 <= index < len(self.calculation_history):
+            del self.calculation_history[index]
+            self.save_to_csv()
+            logging.info(f"Calculation at index {index} deleted.")
+        else:
+            logging.warning(f"Invalid index {index}. Cannot delete calculation.")
+
     def execute(self):
-        try:
-            df_read_history = pd.read_csv(self.csv_file_path)
-            logging.info(f"CSV file '{self.csv_file_path}' read successfully.")
-        except Exception as e:
-            logging.error(f"Failed to read CSV file: {e}")
+        print("CSV Command Menu:")
+        print('-' * 120)
+        print("load ---- clear ---- delete ---- back")
+        print('-' * 120)
+        print("Type 'back' to return to the main menu.")
+        
+        while True:
+            choice = input("Enter a csv command: ").strip().lower()
+            if choice == 'load':
+                self.load_and_display_history()
+            elif choice == 'clear':
+                self.clear_history()
+                print("Calculation history cleared.")
+            elif choice == 'delete':
+                try:
+                    index = int(input("Enter the record number to delete: "))
+                    self.delete_calculation(index)
+                    print(f"Calculation at index {index} deleted.")
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+            elif choice == 'back':
+                print("You are in the main menu")
+                break
+            else:
+                print("Invalid command. Please enter 'load', 'clear', 'delete', or 'back'.")
+
+    def load_and_display_history(self):
+        self.load_existing_history()
+        if not self.calculation_history:
+            print("No calculations found.")
+            logging.info("No calculations found in the history.")
             return
 
         print("Calculation History from CSV:")
-        for index, row in df_read_history.iterrows():
-            calc_info = f"{row['operation']}: {row['num1']}, {row['num2']}, {row['result']}"
+        for index, record in enumerate(self.calculation_history):
+            calc_info = f"{record['operation']}: {record['num1']}, {record['num2']}, {record['result']}"
+            print(f"{index}: {calc_info}")
             logging.info(f"Record {index}: {calc_info}")
-            for field in row.index:
-                field_info = f"    {field}: {row[field]}"
-                logging.info(f"Index: {index}, {field_info}")

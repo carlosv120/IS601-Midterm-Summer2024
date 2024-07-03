@@ -1,11 +1,8 @@
 from decimal import Decimal, InvalidOperation
-from app.commands import Command
+from app.commands import BaseCommand
 import logging
 
-class AdditionCommand(Command):
-    def __init__(self, csv_command):
-        self.csv_command = csv_command
-
+class AdditionCommand(BaseCommand):
     def execute(self, num1=None, num2=None, raise_exception=False):
         try:
             if num1 is None:
@@ -16,6 +13,7 @@ class AdditionCommand(Command):
                 logging.info("Second number entered: %s", num2)
 
             if raise_exception:
+                logging.warning("Forced exception is being raised for testing purposes")
                 raise Exception("Forced exception for testing")
 
             num1_decimal, num2_decimal = map(Decimal, [num1, num2])

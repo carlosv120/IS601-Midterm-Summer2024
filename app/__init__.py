@@ -1,7 +1,7 @@
 import os
 import pkgutil
 import importlib
-from app.commands import CommandHandler, Command
+from app.commands import CommandHandler, Command, BaseCommand
 from app.plugins.menu import MenuCommand
 from app.plugins.csv import CsvCommand
 from dotenv import load_dotenv
@@ -53,8 +53,15 @@ class Calculator:
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
-                if hasattr(item.__init__, '__code__') and 'csv_command' in item.__init__.__code__.co_varnames:
+                # Ensure BaseCommand itself is not instantiated
+                if item is BaseCommand:
+                    continue
+                # Check if the command inherits from BaseCommand
+                
+                if issubclass(item, BaseCommand):
                     self.command_handler.register_command(plugin_name.lower(), item(self.csv_command))
+                elif plugin_name.lower() == "menu":
+                    self.command_handler.register_command(plugin_name.lower(), item(self.plugins))
                 else:
                     self.command_handler.register_command(plugin_name.lower(), item())
                 self.plugins.append(plugin_name)
@@ -65,7 +72,7 @@ class Calculator:
         self.load_plugins()
         
         # Add the Menu plugin to the list and register the menu command
-        self.plugins.append("Menu")
+        self.plugins.append("menu")
         self.command_handler.register_command("menu", MenuCommand(self.plugins))
 
         # Print available plugins

@@ -1,11 +1,8 @@
 from decimal import Decimal, InvalidOperation
-from app.commands import Command
+from app.commands import BaseCommand
 import logging
 
-class SubtractionCommand(Command):
-    def __init__(self, csv_command):
-        self.csv_command = csv_command
-
+class SubtractionCommand(BaseCommand):
     def execute(self, num1=None, num2=None, raise_exception=False):
         try:
             if num1 is None:

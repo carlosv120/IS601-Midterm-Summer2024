@@ -5,6 +5,10 @@ class Command(ABC):
     def execute(self):
         pass
 
+class BaseCommand(Command):
+    def __init__(self, csv_command):
+        self.csv_command = csv_command
+
 class CommandHandler:
     def __init__(self):
         self.commands = {}
@@ -19,4 +23,3 @@ class CommandHandler:
             self.commands[command_name].execute()
         except KeyError:
             print(f"No such command: {command_name}")
-            

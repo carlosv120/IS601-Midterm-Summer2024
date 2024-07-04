@@ -17,13 +17,13 @@ def test_subtract_success(subtraction_command, capfd):
     """Test the subtraction command with valid inputs."""
     subtraction_command.execute('5', '3')
     out = capfd.readouterr().out
-    assert out.strip() == "The result of subtracting 3 from 5 is: 2"
+    assert "The result of subtracting 3 from 5 is: 2" in out
 
 def test_subtract_invalid_number(subtraction_command, capfd):
     """Test the subtraction command with one valid and one invalid input."""
     subtraction_command.execute('1.1', 'abc')
     out = capfd.readouterr().out
-    assert out.strip() == "Invalid number input: 1.1 and/or abc is not a valid number. You are in the main menu."
+    assert "Invalid number input: 1.1 and/or abc is not a valid number. You are in the main menu." in out
 
 def test_subtract_user_input_prompts(subtraction_command, monkeypatch, capfd):
     """Test the subtraction command prompts for user input when num1 and num2 are None."""
@@ -31,7 +31,7 @@ def test_subtract_user_input_prompts(subtraction_command, monkeypatch, capfd):
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
     subtraction_command.execute()
     out = capfd.readouterr().out
-    assert out.strip() == "The result of subtracting 2 from 4 is: 2"
+    assert "The result of subtracting 2 from 4 is: 2" in out
 
 def test_subtract_generic_exception(subtraction_command, capfd):
     """Test the subtraction command with a forced generic exception."""

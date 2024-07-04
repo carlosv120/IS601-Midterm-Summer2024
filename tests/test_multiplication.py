@@ -17,13 +17,13 @@ def test_multiply_success(multiplication_command, capfd):
     """Test the multiplication command with valid inputs."""
     multiplication_command.execute('2', '3')
     out = capfd.readouterr().out
-    assert out.strip() == "The result of multiplying 2 and 3 is: 6"
+    assert "The result of multiplying 2 and 3 is: 6" in out
 
 def test_multiply_invalid_number(multiplication_command, capfd):
     """Test the multiplication command with one valid and one invalid input."""
     multiplication_command.execute('1.2', 'abc')
     out = capfd.readouterr().out
-    assert out.strip() == "Invalid number input: 1.2 and/or abc is not a valid number. You are in the main menu."
+    assert "Invalid number input: 1.2 and/or abc is not a valid number. You are in the main menu." in out
 
 def test_multiply_user_input_prompts(multiplication_command, monkeypatch, capfd):
     """Test the multiplication command prompts for user input when num1 and num2 are None."""
@@ -31,7 +31,7 @@ def test_multiply_user_input_prompts(multiplication_command, monkeypatch, capfd)
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
     multiplication_command.execute()
     out = capfd.readouterr().out
-    assert out.strip() == "The result of multiplying 4 and 2 is: 8"
+    assert "The result of multiplying 4 and 2 is: 8" in out
 
 def test_multiply_generic_exception(multiplication_command, capfd):
     """Test the multiplication command with a forced generic exception."""

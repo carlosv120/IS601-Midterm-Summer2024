@@ -19,6 +19,15 @@ def test_load_history(csv_command, caplog):
         csv_command.load_existing_history()
     assert "Existing calculation history loaded from" in caplog.text
 
+def test_load_and_display_history_no_calculations(csv_command, capfd):
+    """Test the load_and_display_history method when no calculations are found."""
+    # Mock the read_csv method to return an empty DataFrame
+    with patch('pandas.read_csv', return_value=pd.DataFrame()):
+        csv_command.clear_history()
+        csv_command.load_and_display_history()
+        out = capfd.readouterr().out
+        assert "No calculations found." in out
+
 def test_add_calculation(csv_command):
     """Test adding a calculation."""
     csv_command.add_calculation('addition', '2', '3', '5')
@@ -66,11 +75,20 @@ def test_execute_clear(csv_command, monkeypatch, capfd):
     out = capfd.readouterr().out
     assert "Calculation history cleared." in out
 
-def test_execute_delete(csv_command, monkeypatch, capfd):
+def test_execute_delete(csv_command, monkeypatch, caplog, capfd):
     """Test the execute method with delete command."""
     csv_command.add_calculation('addition', '2', '3', '5')
     inputs = iter(['delete', '0', 'back'])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+    with caplog.at_level(logging.INFO):
+        csv_command.execute()
+    assert "Calculation at index 0 deleted." in caplog.text
+
+def test_execute_invalid_command(csv_command, monkeypatch, capfd):
+    """Test the execute method with an invalid command."""
+    inputs = iter(['invalid', 'back'])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
     csv_command.execute()
     out = capfd.readouterr().out
-    assert "Calculation at index 0 deleted." in out
+    assert "Invalid command. Please enter 'load', 'clear', 'delete', or 'back'." in out
+    assert "You are in the main menu" in out

@@ -82,13 +82,8 @@ class CsvCommand(Command):
                 print("Calculation history cleared.")
             elif choice == 'delete':
                 cls.load_and_display_history()
-                try:
-                    index = int(input("Enter the record number to delete: "))
-                    cls.delete_calculation(index)
-                    print(f"Calculation at index {index} deleted.")
-                except ValueError:
-                    print("Invalid input. Please enter a valid number.")
-                    logging.warning("User entered invalid number for deletion.")
+                index = int(input("Enter the record number to delete: "))
+                cls.delete_calculation(index)
             elif choice == 'back':
                 print("You are in the main menu")
                 logging.info("Returning to the main menu.")
@@ -104,7 +99,6 @@ class CsvCommand(Command):
             print("No calculations found.")
             logging.info("No calculations found in the history.")
             return
-
         cls.print_calculation_history()
 
     @classmethod

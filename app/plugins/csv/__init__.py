@@ -15,12 +15,9 @@ class CsvCommand(Command):
     @classmethod
     def load_existing_history(cls):
         if os.path.exists(cls.csv_file_path):
-            try:
-                df_existing_history = pd.read_csv(cls.csv_file_path)
-                cls.calculation_history = df_existing_history.to_dict('records')
-                logging.info(f"Existing calculation history loaded from '{cls.csv_file_path}'.")
-            except Exception as e:
-                logging.error(f"Failed to read existing CSV file: {e}")
+            df_existing_history = pd.read_csv(cls.csv_file_path)
+            cls.calculation_history = df_existing_history.to_dict('records')
+            logging.info(f"Existing calculation history loaded from '{cls.csv_file_path}'.")
 
     @classmethod
     def add_calculation(cls, operation, num1, num2, result):

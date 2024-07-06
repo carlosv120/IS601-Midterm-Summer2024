@@ -1,5 +1,7 @@
 # Midterm IS - 601 Introduction to Web Development Systems
 
+In this Readme file, you will find all the midterm requirements that come along with the code, including descriptions and implementation examples of different concepts learned throughout the course. The link to the video will be located at the end of this document.
+
 ## Design Patterns
 
 ### Creational Patterns: Factory Method.
@@ -17,6 +19,7 @@
 **Implementation:** The entire command structure, with the best example being the `MenuCommand` is a clear use of this pattern, including the `AdditionCommand`, `DivisionCommand`, `SubtractionCommand`, etc. Each command encapsulates a specific operation and can be executed independently.
 
 **Example:** ([BaseCommand Class. Line 8:](https://github.com/carlosv120/IS601-Midterm-Summer2024/blob/main/app/commands/__init__.py)).
+
 **Example:** ([AdditionCommand Class. Line 5:](https://github.com/carlosv120/IS601-Midterm-Summer2024/blob/main/app/plugins/addition/__init__.py)).
 
 ## Environment Variables
@@ -34,6 +37,7 @@
 **Implementation:** Logging is configured in the Calculator class and used all over the application to log important events, such as initialization, errors, and significant operations.
 
 **Configuration:** ([Calculator Class. Line 23: configure_logging](https://github.com/carlosv120/IS601-Midterm-Summer2024/blob/main/app/__init__.py)).
+
 **Example:** ([AdditionCommand Class. Line 10, 13, 16:](https://github.com/carlosv120/IS601-Midterm-Summer2024/blob/main/app/plugins/addition/__init__.py)).
 
 
@@ -54,3 +58,7 @@
 **Implementation:** When saving to the CSV file, the code tries to write and catches exceptions if the operation fails.
 
 **Example:** ([CsvCommand Class. Line 44: save_to_csv ](https://github.com/carlosv120/IS601-Midterm-Summer2024/blob/main/app/plugins/csv/__init__.py)).
+
+## Video demonstration
+
+**Link:** 

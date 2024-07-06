@@ -61,4 +61,4 @@ In this Readme file, you will find all the midterm requirements that come along 
 
 ## Video demonstration
 
-**Link:** 
+**Link:** https://youtu.be/k9OoGrHhFjs?si=6j4TKJmUaDLTWETt

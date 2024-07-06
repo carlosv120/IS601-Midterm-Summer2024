@@ -15,9 +15,15 @@ class CsvCommand(Command):
     @classmethod
     def load_existing_history(cls):
         if os.path.exists(cls.csv_file_path):
-            df_existing_history = pd.read_csv(cls.csv_file_path)
-            cls.calculation_history = df_existing_history.to_dict('records')
-            logging.info(f"Existing calculation history loaded from '{cls.csv_file_path}'.")
+            try:
+                df_existing_history = pd.read_csv(cls.csv_file_path)
+                cls.calculation_history = df_existing_history.to_dict('records')
+                logging.info(f"Existing calculation history loaded from '{cls.csv_file_path}'.")
+            except pd.errors.EmptyDataError:
+                cls.calculation_history = []
+                logging.info(f"No data found in '{cls.csv_file_path}'. Initialized with empty history.")
+            except Exception as e:
+                logging.error(f"Failed to read existing CSV file: {e}")
 
     @classmethod
     def add_calculation(cls, operation, num1, num2, result):
@@ -29,7 +35,6 @@ class CsvCommand(Command):
         })
         cls.save_to_csv()
         logging.info(f"Calculation added: {operation}({num1}, {num2}) = {result}")
-        cls.print_calculation_history()
 
     @classmethod
     def save_to_csv(cls):
@@ -82,8 +87,16 @@ class CsvCommand(Command):
                 print("Calculation history cleared.")
             elif choice == 'delete':
                 cls.load_and_display_history()
-                index = int(input("Enter the record number to delete: "))
-                cls.delete_calculation(index)
+                if not cls.calculation_history:
+                    print("No calculations available to delete.")
+                    logging.info("No calculations available to delete.")
+                    break
+                try:
+                    index = int(input("Enter the record number to delete: "))
+                    cls.delete_calculation(index)
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+                    logging.warning("User entered an invalid number for deletion.")
             elif choice == 'back':
                 print("You are in the main menu")
                 logging.info("Returning to the main menu.")

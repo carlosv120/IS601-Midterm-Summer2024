@@ -2,7 +2,7 @@
 import logging
 from unittest.mock import patch, mock_open
 import pytest
-import pandas as pd  # Add the missing import
+import pandas as pd
 from app.plugins.csv import CsvCommand
 
 @pytest.fixture
@@ -19,14 +19,32 @@ def test_load_history(csv_command, caplog):
         csv_command.load_existing_history()
     assert "Existing calculation history loaded from" in caplog.text
 
-def test_load_and_display_history_no_calculations(csv_command, capfd):
-    """Test the load_and_display_history method when no calculations are found."""
-    # Mock the read_csv method to return an empty DataFrame
-    with patch('pandas.read_csv', return_value=pd.DataFrame()):
-        csv_command.clear_history()
-        csv_command.load_and_display_history()
-        out = capfd.readouterr().out
-        assert "No calculations found." in out
+def test_load_history_empty_data_error(caplog):
+    """Test loading the calculation history with EmptyDataError."""
+    with patch('os.path.exists', return_value=True):
+        with patch('pandas.read_csv', side_effect=pd.errors.EmptyDataError):
+            with caplog.at_level(logging.INFO):
+                CsvCommand.load_existing_history()
+    assert "No data found in 'data/calculation_history.csv'. Initialized with empty history." in caplog.text
+
+def test_load_history_general_exception(caplog):
+    """Test loading the calculation history with a general exception."""
+    with patch('os.path.exists', return_value=True):
+        with patch('pandas.read_csv', side_effect=Exception("General error")):
+            with caplog.at_level(logging.ERROR):
+                CsvCommand.load_existing_history()
+    assert "Failed to read existing CSV file: General error" in caplog.text
+
+def test_execute_delete_no_calculations(csv_command, monkeypatch, capfd, caplog):
+    """Test the execute method with delete command when no calculations are available."""
+    # Clear any existing calculations
+    csv_command.clear_history()
+    inputs = iter(['delete', 'back'])
+    monkeypatch.setattr('builtins.input', lambda _: next(inputs))
+    with caplog.at_level(logging.INFO):
+        csv_command.execute()
+    out = capfd.readouterr().out
+    assert "No calculations available to delete." in out
 
 def test_add_calculation(csv_command):
     """Test adding a calculation."""

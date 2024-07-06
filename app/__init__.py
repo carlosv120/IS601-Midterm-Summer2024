@@ -72,7 +72,6 @@ class Calculator:
         self.load_plugins()
         
         # Add the Menu plugin to the list and register the menu command
-        self.plugins.append("menu")
         self.command_handler.register_command("menu", MenuCommand(self.plugins))
 
         # Print available plugins
